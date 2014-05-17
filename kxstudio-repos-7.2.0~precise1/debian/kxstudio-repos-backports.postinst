@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+#DEBHELPER#
+
+###########################################################################################
+# Ubuntu only
+
+if [ ! -f /usr/bin/add-apt-repository ]; then
+  exit
+fi
+
+###########################################################################################
+# Set VERSION
+
+VERSION="precise"
+# exit
+
+###########################################################################################
+# Set add-repo tool and fix LinuxMint
+
+ADD_REPO=/usr/bin/add-apt-repository
+
+if (cat /etc/lsb-release | grep DISTRIB_ID=LinuxMint > /dev/null); then
+  MINTVERSION=`cat /etc/lsb-release | grep DISTRIB_RELEASE= | awk 'sub("DISTRIB_RELEASE=","")'`
+  if [ "$MINTVERSION" -gt "15" ]; then
+    ADD_REPO=add-apt-repository
+  fi
+fi
+
+###########################################################################################
+# Check if setup has been done already
+
+if [ -f /var/kxstudio/debian-backports-repo-copied-"$VERSION" ]; then
+  exit
+fi
+
+###########################################################################################
+# Backports Debian repo for current VERSION
+
+if [ ! -f /etc/apt/sources.list.d/kxstudio-debian-backports-"$VERSION".list ]; then
+  $ADD_REPO -y ppa:kxstudio-debian/backports
+fi
+
+###########################################################################################
+# Ensure this is not run again
+
+mkdir -p /var/kxstudio/
+touch /var/kxstudio/debian-backports-repo-copied-"$VERSION"

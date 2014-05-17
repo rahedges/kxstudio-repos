@@ -1,0 +1,3 @@
+kxstudio-debian.list   etc/apt/sources.list.d/
+kxstudio-non-free.list etc/apt/sources.list.d/
+*.gpg                  usr/share/keyrings/

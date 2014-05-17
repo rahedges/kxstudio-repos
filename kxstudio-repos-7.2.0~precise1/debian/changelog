@@ -1,0 +1,17 @@
+kxstudio-repos (7.2.0~precise1) precise; urgency=medium
+
+  * precise build
+
+ -- falkTX <falktx@gmail.com>  Sat, 21 Dec 2013 23:48:43 +0000
+
+kxstudio-repos (7.2.0~kxstudio1) lucid; urgency=medium
+
+  * Fix LinuxMint Maya
+
+ -- falkTX <falktx@gmail.com>  Sat, 21 Dec 2013 23:47:10 +0000
+
+kxstudio-repos (7.1.0~kxstudio2) lucid; urgency=low
+
+  * New packaging for debian repos
+
+ -- falkTX <falktx@gmail.com>  Wed, 14 Aug 2013 23:38:10 +0100

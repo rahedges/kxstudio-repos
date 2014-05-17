@@ -1,0 +1,22 @@
+Source: kxstudio-repos
+Section: metapackages
+Priority: optional
+Maintainer: falkTX <falktx@gmail.com>
+Standards-Version: 3.8.4
+Build-Depends: debhelper (>= 7)
+
+Package: kxstudio-repos
+Architecture: all
+Pre-depends: software-properties-common, wget
+Depends: ${misc:Depends}
+Recommends: apt
+Description: KXStudio repositories
+ This package will enable the KXStudio repositories.
+
+Package: kxstudio-repos-backports
+Architecture: all
+Depends: kxstudio-repos, ${misc:Depends}
+Description: KXStudio repositories (backports)
+ This package will enable the extra KXStudio backports repository.
+ .
+ You should only use this repository if you run Ubuntu 12.04-13.04 or Debian.

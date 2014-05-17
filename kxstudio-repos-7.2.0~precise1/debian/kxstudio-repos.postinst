@@ -1,0 +1,110 @@
+#!/bin/bash
+
+set -e
+
+#DEBHELPER#
+
+if [ -f /usr/bin/apt-key ]; then
+    apt-key add /usr/share/keyrings/falktx.gpg
+    apt-key add /usr/share/keyrings/kxstudio-debian.gpg
+fi
+
+###########################################################################################
+# Ubuntu only
+
+if [ ! -f /usr/bin/add-apt-repository ]; then
+  exit
+fi
+
+###########################################################################################
+# Set VERSION
+
+VERSION="precise"
+# exit
+
+###########################################################################################
+# Set add-repo tool and fix LinuxMint
+
+ADD_REPO=/usr/bin/add-apt-repository
+
+if (cat /etc/lsb-release | grep DISTRIB_ID=LinuxMint > /dev/null); then
+  MINTVERSION=`cat /etc/lsb-release | grep DISTRIB_RELEASE= | awk 'sub("DISTRIB_RELEASE=","")'`
+  if [ "$MINTVERSION" -gt "15" ]; then
+    ADD_REPO=add-apt-repository
+  fi
+fi
+
+###########################################################################################
+# Check if setup has been done already
+
+if [ -f /var/kxstudio/debian-repos-copied-"$VERSION" ]; then
+  exit
+fi
+
+###########################################################################################
+# Debian repos for current VERSION
+
+if [ ! -f /etc/apt/sources.list.d/kxstudio-debian-libs-"$VERSION".list ]; then
+  $ADD_REPO -y ppa:kxstudio-debian/libs
+fi
+
+if [ ! -f /etc/apt/sources.list.d/kxstudio-debian-plugins-"$VERSION".list ]; then
+  $ADD_REPO -y ppa:kxstudio-debian/plugins
+fi
+
+if [ ! -f /etc/apt/sources.list.d/kxstudio-debian-apps-"$VERSION".list ]; then
+  $ADD_REPO -y ppa:kxstudio-debian/apps
+fi
+
+if [ ! -f /etc/apt/sources.list.d/kxstudio-debian-kxstudio-"$VERSION".list ]; then
+  $ADD_REPO -y ppa:kxstudio-debian/kxstudio
+fi
+
+###########################################################################################
+# 12.04 Precise compat repos
+
+if [ $VERSION = "precise" ]; then
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-ppa-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/ppa
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-plugins-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/plugins
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-music-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/music
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-kernel-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/kernel
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-kxstudio-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/kxstudio
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-latest-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/latest
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-games-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/games
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kubuntu-ppa-backports-precise.list ]; then
+    $ADD_REPO -y ppa:kubuntu-ppa/backports
+  fi
+
+  if [ ! -f /etc/apt/sources.list.d/kxstudio-team-kxstudio-kde49-precise.list ]; then
+    $ADD_REPO -y ppa:kxstudio-team/kxstudio-kde49
+  fi
+
+fi
+
+###########################################################################################
+# Ensure this is not run again
+
+mkdir -p /var/kxstudio/
+touch /var/kxstudio/debian-repos-copied-"$VERSION"
